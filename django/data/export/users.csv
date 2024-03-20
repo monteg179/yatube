@@ -1,0 +1,2 @@
+id,username,email,first_name,last_name,date_joined,last_login,is_active,is_staff,is_superuser
+100,leo,ln@yasnaya.polyana,Лев,Толстой,2024-03-19 19:36:28.508997+00:00,,True,False,False

@@ -1,0 +1,21 @@
+{% extends 'card.html' %}
+
+{% block title %}
+  Войти
+{% endblock %}
+
+{% block card_header %}
+  Войти на сайт
+{% endblock %}
+
+{% block card_body %}
+  {% include 'includes/form_errors.html' %}
+  <form method="post">
+    {% csrf_token %}
+    {% include 'includes/form_fields.html' %}
+    <div class="col-md-6 offset-md-4">
+      <button type="submit" class="btn btn-primary">
+        Войти
+      </button>
+    </div>
+{% endblock %}

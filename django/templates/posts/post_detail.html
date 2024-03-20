@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Пост {{ post.text|truncatechars:30 }}
+{% endblock %}
+
+{% block content %}
+  {% load user_filters %}
+  <div class="row">
+    <aside class="col-12 col-md-3">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          Дата публикации: {{ post.created_at|date:"d E Y" }}
+        </li>
+        <li class="list-group-item">
+          Группа:
+          {% if post.group %}
+            {# <a href="{{ post.group.get_absolute_url }}"> #}
+            <a href="{% url 'posts:group_list' post.group.slug %}">
+              {{ post.group.title }}
+            </a>
+          {% endif %}
+        </li>
+        <li class="list-group-item">
+          Автор:
+          <a href="{% url 'users:profile' post.author.username %}">
+            {{ post.author|author_full_name }}
+          </a>
+        </li>
+        <li class="list-group-item">
+          Всего постов автора: <span> {{ post.author_posts_amount }} </span>
+        </li>
+      </ul>
+    </aside>
+    <article class="col-12 col-md-9">
+      <p>{{ post.text|linebreaksbr }}</p>
+      {% if post.author_id == user.id %}
+        <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">
+          редактировать запись
+        </a>
+      {% endif %}
+      {% if user.is_authenticated %}
+        <div class="card my-4">
+          <h5 class="card-header">Добавить комментарий:</h5>
+            <div class="card-body">
+              <form method="post">
+                {% csrf_token %}      
+                <div class="form-group mb-2">
+                  {{ form.text|addclass:"form-control" }}
+                </div>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+              </form>
+          </div>
+        </div>
+      {% endif %}
+      {% for comment in comments %}
+        <div class="media mb-4">
+          <div class="media-body">
+            <h5 class="mt-0">
+              <a href="{% url 'users:profile' comment.author.username %}">
+                {{ comment.author.username }}
+              </a>
+            </h5>
+            <p>{{ comment.text }}</p>
+          </div>
+        </div>
+      {% endfor %}       
+    </article>
+  </div> 
+{% endblock%}

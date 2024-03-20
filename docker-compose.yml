@@ -1,0 +1,31 @@
+version: '3'
+
+volumes:
+    yatube_data:
+    yatube_static:
+
+services:
+  database:
+    build: ./database/
+    image: yatube_database:latest
+    env_file: .env
+    volumes:
+      - yatube_data:/var/lib/postgresql/data
+  django:
+    build: ./django/
+    image: yatube_django:latest
+    env_file: .env
+    volumes:
+      - yatube_static:/staticfiles
+    depends_on:
+      - database
+  gateway:
+    build: ./gateway/
+    image: yatube_gateway:latest
+    env_file: .env
+    volumes:
+      - yatube_static:/staticfiles
+    depends_on:
+      - django
+    ports:
+      - 8000:80
